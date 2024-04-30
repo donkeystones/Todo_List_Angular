@@ -16,10 +16,10 @@ export class AppComponent {
   filter: "all" | "active" | "done" = "all";
 
   allItems = [
-    { description: "eat", done: false },
-    { description: "sleep", done: false },
-    { description: "code", done: false },
-    { description: "repeat", done: false },
+    { description: "eat", done: false, urgent: false },
+    { description: "sleep", done: false, urgent: false },
+    { description: "code", done: false, urgent: false },
+    { description: "repeat", done: false, urgent: true },
   ]
 
   get items() {
@@ -36,7 +36,8 @@ export class AppComponent {
 
     this.allItems.unshift({
       description,
-      done: false
+      done: false,
+      urgent: false
     });
   }
 

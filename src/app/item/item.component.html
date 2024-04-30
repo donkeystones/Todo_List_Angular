@@ -1,4 +1,4 @@
-<div class="item">
+<div class="item" [ngClass]="item.urgent ? 'urgent' : ''">
     <input 
         [id]="item.description"
         type="checkbox"
@@ -6,6 +6,14 @@
         [checked]="item.done"
     />
     <label [for]="item.description">{{item.description}}</label>
+    <input
+        value="Urgent"
+        [id]="item.description + 'urgent'"
+        type="checkbox"
+        (change)="item.urgent = !item.urgent"
+        [checked]="item.urgent"
+    />
+    <label [for]="item.description + 'urgent'">Urgent</label>
     <div class="btn-wrapper" *ngIf="!editable">
         <button class="btn" (click)="editable = !editable">Edit</button>
         <button class="btn btn-warn" (click)="remove.emit()">Delete</button>
