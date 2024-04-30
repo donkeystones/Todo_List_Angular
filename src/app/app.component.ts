@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Item } from './item';
+import { ItemComponent } from './item/item.component';
 
 @Component({
   standalone: true,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, ItemComponent],
 })
 export class AppComponent {
   componentTitle = "My To Do List";
@@ -37,4 +39,10 @@ export class AppComponent {
       done: false
     });
   }
+
+  remove(item: Item) {
+    this.allItems.splice(this.allItems.indexOf(item), 1);
+  }
+
+
 }

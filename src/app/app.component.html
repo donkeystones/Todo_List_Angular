@@ -1,7 +1,7 @@
 
 <main class="main">
     <h1>{{ componentTitle }}</h1>
-    <label for="addItemInput">What would yo like to do today</label>
+    <label for="addItemInput">What would you like to do today</label>
 
     <input 
         #newItem
@@ -13,9 +13,17 @@
 
     <button class="btn-primary" (click)="addItem(newItem.value)">Add</button>
 
-    <ul>
-        <li *ngFor="let item of items">{{item.description}}</li>
-    </ul>
+    <h2>
+        {{items.length}}
+        <span *ngIf="items.length === 1; else elseBlock">item</span>
+        <ng-template #elseBlock>items</ng-template>
+      </h2>
+      
+      <ul>
+        <li *ngFor="let i of items">
+          <app-item (remove)="remove(i)" [item]="i"></app-item>
+        </li>
+      </ul>
 
     
 </main>
