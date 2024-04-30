@@ -1,3 +1,21 @@
 
 <main class="main">
+    <h1>{{ componentTitle }}</h1>
+    <label for="addItemInput">What would yo like to do today</label>
+
+    <input 
+        #newItem
+        placeholder="add an item"
+        (keyup.enter)="addItem(newItem.value); newItem.value = ''"
+        class="lg-text-input"
+        id="addItemInput"
+    />
+
+    <button class="btn-primary" (click)="addItem(newItem.value)">Add</button>
+
+    <ul>
+        <li *ngFor="let item of items">{{item.description}}</li>
+    </ul>
+
+    
 </main>
