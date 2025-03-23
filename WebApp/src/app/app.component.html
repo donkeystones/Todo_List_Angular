@@ -1,0 +1,21 @@
+
+<main class="todoContainer">
+  <div className="addTodoItemBox">
+    <input [(ngModel)]="newName" placeholder="New Todo"/>
+    <button (click)="addTodo()">Add</button>
+  </div>
+  <div className="todoList">
+    <h1>Todo</h1>
+    @for (todo of todoList;track todo.id){
+      <li>{{todo.name}} <button (click)="deleteTodo(todo.id)">Remove</button><button (click)="completeTodo(todo.id)">Complete</button></li>
+    }
+  </div>
+  <div className="completedTodos">
+    <h1>Completed!</h1>
+    @for (todo of completedTodos; track todo.id){
+      <li>{{todo.name}}<button (click)="deleteCompletedTodo(todo.id)">Remove</button></li>
+    }
+  </div>
+</main>
+
+<router-outlet />
