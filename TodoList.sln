@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoList", "TodoList\TodoList.csproj", "{BFE82282-2D0D-4EAA-913C-C20B3EF93EC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo_List_Angular", "Todo_List_Angular\TodoList.csproj", "{BFE82282-2D0D-4EAA-913C-C20B3EF93EC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
