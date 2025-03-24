@@ -31,7 +31,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(myAllowSpecificOrigins);
 app.MapGet("/todoitems", async (TodoDb db) =>
-    await db.Todos.Where(t => !t.IsComplete).ToListAsync());
+    await db.Todos.ToListAsync());
 
 app.MapGet("/todoitems/complete", async (TodoDb db) =>
     await db.Todos.Where(t => t.IsComplete).ToListAsync());

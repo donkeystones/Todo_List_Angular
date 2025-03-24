@@ -6,14 +6,32 @@
   </div>
   <div className="todoList">
     <h1>Todo</h1>
-    @for (todo of todoList;track todo.id){
-      <li>{{todo.name}} <button (click)="deleteTodo(todo.id)">Remove</button><button (click)="completeTodo(todo.id)">Complete</button></li>
+    @for (todo of incompleteTodos(); track todo.id) {
+      <li>
+        <!-- If we're editing this todo -->
+        <div *ngIf="currentlyEditingId === todo.id; else viewMode">
+          <input [(ngModel)]="currentlyEditingValue" />
+          <button (click)="saveTodo(todo.id)">Save</button>
+          <button (click)="cancelEdit()">Cancel</button>
+        </div>
+  
+        <!-- Otherwise, show view mode -->
+        <ng-template #viewMode>
+          {{ todo.name }}
+          <button (click)="editTodo(todo.id)">Edit</button>
+          <button (click)="deleteTodo(todo.id)">Remove</button>
+          <button (click)="completeTodo(todo.id)">Complete</button>
+        </ng-template>
+      </li>
     }
   </div>
   <div className="completedTodos">
     <h1>Completed!</h1>
-    @for (todo of completedTodos; track todo.id){
-      <li>{{todo.name}}<button (click)="deleteCompletedTodo(todo.id)">Remove</button></li>
+    @for (todo of completeTodos(); track todo.id){
+      <li>
+        {{todo.name}}
+        <button (click)="deleteTodo(todo.id)">Remove</button>
+      </li>
     }
   </div>
 </main>

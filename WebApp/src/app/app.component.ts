@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +13,7 @@ export interface TodoItem{
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, HttpClientModule],
+  imports: [RouterOutlet, FormsModule, HttpClientModule,CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -21,12 +22,51 @@ export class AppComponent implements OnInit{
 
   constructor(private http: HttpClient){}
   todoList : TodoItem [] = [];
-  completedTodos : TodoItem [] = [];
   newName: string='';
+  currentlyEditingValue: string = "";
+  currentlyEditingId: number = -1;
   
   ngOnInit(): void {
     this.http.get<TodoItem[]>("http://localhost:5039/todoitems").subscribe(items => {if (items.length > 0) this.todoList = items})
-    this.http.get<TodoItem[]>("http://localhost:5039/todoitems/complete").subscribe(items => {if (items.length > 0) this.completedTodos = items})
+  }
+
+  cancelEdit(): void {
+    this.currentlyEditingId = -1;
+    this.currentlyEditingValue = '';
+  }
+
+  saveTodo(id: number): void {
+    const todoIdx = this.todoList.findIndex(todo => todo.id === id);
+
+  if (todoIdx === -1) {
+    console.error('Todo not found!');
+    return;
+  }
+
+  const updatedTodo = {
+    ...this.todoList[todoIdx],
+    name: this.currentlyEditingValue
+  };
+
+  this.http.put<void>(`http://localhost:5039/todoitems/${id}`, updatedTodo)
+    .subscribe({
+      next: () => {
+        this.todoList[todoIdx] = updatedTodo;
+        this.currentlyEditingId = -1;
+        this.currentlyEditingValue = '';
+      },
+      error: (err) => {
+        console.error('Failed to save todo:', err);
+      }
+    });
+  }
+
+  editTodo(id: number): void {
+    const todo = this.todoList.find(todo => todo.id === id);
+    if (todo) {
+      this.currentlyEditingId = id;
+      this.currentlyEditingValue = todo.name;
+    }
   }
   
   addTodo(): void{ 
@@ -43,17 +83,17 @@ export class AppComponent implements OnInit{
   }
 
   completeTodo(id: number): void {
-    let completeTodo = this.todoList.find(todo => todo.id === id);
+    let todoIdx = this.todoList.findIndex(todo => todo.id === id);
 
-    if(completeTodo !== undefined){
-      completeTodo.isComplete = true;
-    this.http.put<TodoItem>(
-      `http://localhost:5039/todoitems/${id}`,
-      completeTodo
-    ).subscribe(todo => {
-      this.completedTodos.push(completeTodo);
-      this.todoList.splice(this.todoList.findIndex(todoItem => todoItem.id === id),1);
-    })
+    if(todoIdx !== -1){
+      let completedTodo = this.todoList[todoIdx];
+      completedTodo.isComplete = true;
+      this.http.put<TodoItem>(
+        `http://localhost:5039/todoitems/${id}`,
+        completedTodo
+      ).subscribe(todo => {
+        this.todoList[todoIdx] = completedTodo;
+      })
     }
   }
   
@@ -62,8 +102,12 @@ export class AppComponent implements OnInit{
     this.todoList.splice(this.todoList.findIndex(todoItem => todoItem.id === id),1);
   }
 
-  deleteCompletedTodo(id: number): void {
-    this.http.delete(`http://localhost:5039/todoitems/${id}`).subscribe(() => console.log("Delete successfull"));
-    this.completedTodos.splice(this.completedTodos.findIndex(todoItem => todoItem.id === id),1);
+  completeTodos(): TodoItem[] {
+    return this.todoList.filter(todo => todo.isComplete)
+  }
+
+
+  incompleteTodos(): TodoItem[] {
+    return this.todoList.filter(todo => !todo.isComplete)
   }
 }
